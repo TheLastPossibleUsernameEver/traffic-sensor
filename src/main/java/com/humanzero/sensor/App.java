@@ -15,7 +15,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeoutException;
-import java.util.stream.Stream;
 
 /**
  * Ca
@@ -24,17 +23,17 @@ import java.util.stream.Stream;
 
 public class App {
 
-	private static Stream<Packet> packetStream = Stream.empty();
+	private static final Logger logger = LoggerFactory.getLogger(App.class);
 
-//	private static void capturePackets(){
+	private static PcapNetworkInterface networkInterface = null;
+
+	private static List<Packet> packetList = new ArrayList<>();
+
+	//	private static void capturePackets(){
 //		Will be implemented later
 //	}
 
 	public static void main(String[] args) {
-
-		final Logger logger = LoggerFactory.getLogger(App.class);
-
-		PcapNetworkInterface networkInterface = null;
 
 		try {
 			networkInterface = new NifSelector().selectNetworkInterface();
@@ -42,13 +41,10 @@ public class App {
 			e.printStackTrace();
 		}
 
-		int snapshotLength = 65536;
-		int timeout = 10;
-
-		List<Packet> packetList = new ArrayList<>();
-
 		try {
-		        PcapHandle packageHandler = networkInterface.openLive(snapshotLength, PromiscuousMode.PROMISCUOUS, timeout);
+			int snapshotLength = 65536;
+			int timeout = 10;
+			PcapHandle packageHandler = networkInterface.openLive(snapshotLength, PromiscuousMode.PROMISCUOUS, timeout);
 
 		        while (true) {
 		            Packet packet = packageHandler.getNextPacketEx();
