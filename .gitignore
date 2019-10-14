@@ -1,0 +1,8 @@
+#ignore build files
+target
+
+#ignore module info
+traffic-sensor.iml
+
+#ignore idea files
+.idea
