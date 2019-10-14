@@ -38,7 +38,7 @@ public class App {
 				try {
 					while (true) {
 						Packet packet = packageHandler.getNextPacketEx();
-						System.out.println(packageHandler.getTimestamp().toString() + " Header is: " +
+						logger.info(packageHandler.getTimestamp().toString() + " Header is: " +
 								packet.getHeader() + " Payload is: " +
 								packet.getPayload());
 						packetList.add(packet);
@@ -46,7 +46,7 @@ public class App {
 						logger.info("Captured: " + packetList.size() + " packets." );
 					}
 				} catch (Exception e) {
-
+					e.printStackTrace();
 				}
 
 			}).start();
