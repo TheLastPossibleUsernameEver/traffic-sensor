@@ -6,6 +6,7 @@ import org.pcap4j.util.NifSelector;
 import java.io.IOException;
 
 public class NetworkUtils {
+
     public static void selectInterface(PcapNetworkInterface networkInterface){
         try {
             networkInterface = new NifSelector().selectNetworkInterface();
@@ -13,4 +14,6 @@ public class NetworkUtils {
             e.printStackTrace();
         }
     }
+
+
 }

@@ -1,34 +1,23 @@
 package com.humanzero.sensor;
 
 import com.humanzero.sensor.utils.NetworkUtils;
-import org.apache.commons.lang3.ArrayUtils;
 import org.apache.spark.SparkConf;
 import org.apache.spark.api.java.JavaRDD;
 import org.apache.spark.api.java.JavaSparkContext;
 import org.apache.spark.streaming.Durations;
 import org.apache.spark.streaming.api.java.JavaDStream;
 import org.apache.spark.streaming.api.java.JavaStreamingContext;
-import org.pcap4j.core.NotOpenException;
 import org.pcap4j.core.PcapHandle;
-import org.pcap4j.core.PcapNativeException;
 import org.pcap4j.core.PcapNetworkInterface;
 import org.pcap4j.core.PcapNetworkInterface.PromiscuousMode;
 import org.pcap4j.packet.Packet;
-import org.pcap4j.util.NifSelector;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.EOFException;
-import java.io.IOException;
-import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
 import java.util.concurrent.LinkedBlockingQueue;
-import java.util.concurrent.LinkedTransferQueue;
-import java.util.concurrent.SynchronousQueue;
-import java.util.concurrent.TimeoutException;
-import java.util.stream.Collectors;
 
 /**
  * Ca
@@ -63,16 +52,13 @@ public class App {
 
 //						logger.info("Captured: " + packetQueue.size() + " packets." );
 					}
-				} catch (NotOpenException |
-						 PcapNativeException |
-						 EOFException |
-						 TimeoutException e) {
+				} catch (Exception e) {
 					e.printStackTrace();
 				}
 
 			}).start();
 
-		} catch (PcapNativeException e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
@@ -109,6 +95,7 @@ public class App {
 
 					JavaDStream dStream = streamingContext.queueStream(RDDqueue);
 					dStream.print();
+
 
 					streamingContext.start();
 					streamingContext.awaitTermination();
