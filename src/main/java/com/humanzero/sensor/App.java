@@ -6,10 +6,8 @@ import org.apache.log4j.Logger;
 import org.apache.spark.SparkConf;
 import org.apache.spark.streaming.Durations;
 import org.apache.spark.streaming.api.java.JavaDStream;
-import org.apache.spark.streaming.api.java.JavaPairDStream;
 import org.apache.spark.streaming.api.java.JavaStreamingContext;
 import org.pcap4j.packet.Packet;
-import scala.Tuple2;
 
 import java.util.Arrays;
 //import org.slf4j.Logger;
@@ -39,8 +37,6 @@ public class App {
 		JavaDStream<Byte> byteFlow = networkReceiverStream
 				.map(packet -> ArrayUtils.toObject(packet.getRawData()))
 				.flatMap(x -> Arrays.asList(x).iterator());
-
-//m		networkReceiverStream.count().print();
 
 		byteFlow.count().print();
 
