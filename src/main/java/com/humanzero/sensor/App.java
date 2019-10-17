@@ -22,13 +22,15 @@ import java.util.Arrays;
 
 public class App {
 
-	private static final SparkConf conf = new SparkConf().setMaster("local[1]").setAppName("traffic-sensor");
+	private static final SparkConf conf = new SparkConf().setMaster("local[2]").setAppName("traffic-sensor");
 
-	private static final int BATCH_INTERVAL = 10;
+	private static final int BATCH_INTERVAL = 15;
 
 	private static Logger logger = Logger.getRootLogger();
 
 	public static void main(String[] args) throws InterruptedException{
+
+		logger.setLevel(Level.WARN);
 
 		JavaStreamingContext streamingContext = new JavaStreamingContext(conf, Durations.seconds(BATCH_INTERVAL));
 
@@ -38,10 +40,9 @@ public class App {
 				.map(packet -> ArrayUtils.toObject(packet.getRawData()))
 				.flatMap(x -> Arrays.asList(x).iterator());
 
-		JavaPairDStream<Byte, Integer> pairs = byteFlow.mapToPair(s -> new Tuple2<>(s, 1));
-		JavaPairDStream<Byte, Integer> byteCounts = pairs.reduceByKey(Integer::sum);
+//m		networkReceiverStream.count().print();
 
-		byteCounts.print();
+		byteFlow.count().print();
 
 		streamingContext.start();
 		streamingContext.awaitTermination();

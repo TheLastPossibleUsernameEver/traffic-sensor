@@ -47,7 +47,8 @@ public class NetworkReceiver extends Receiver<Packet> {
 
         try {
 
-            packetHandler = Objects.requireNonNull(networkInterface)
+            packetHandler = Objects
+                    .requireNonNull(networkInterface)
                     .openLive(snapshotLength, PcapNetworkInterface.PromiscuousMode.PROMISCUOUS, timeout);
 
             while(packetHandler.getNextPacketEx()!=null){
