@@ -1,5 +1,6 @@
 package com.humanzero.sensor;
 
+import org.apache.commons.lang3.ArrayUtils;
 import org.apache.spark.SparkConf;
 import org.apache.spark.streaming.Durations;
 import org.apache.spark.streaming.api.java.JavaDStream;
@@ -25,7 +26,8 @@ public class App {
 
 		JavaDStream<Packet> networkReceiverStream = streamingContext.receiverStream(new NetworkReceiver());
 
-		JavaDStream<byte[]> byteFlow = networkReceiverStream.map(Packet::getRawData);
+		JavaDStream<byte[]> byteFlow = networkReceiverStream
+				.map(Packet::getRawData);
 
 		byteFlow.count().print();
 
