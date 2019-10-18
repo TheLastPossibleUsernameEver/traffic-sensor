@@ -24,7 +24,7 @@ import java.util.Map;
 public class App {
 
 	private static final SparkConf conf = new SparkConf().setMaster("local[2]").setAppName("traffic-sensor");
-	private static final int BATCH_INTERVAL = 15;
+	private static final int BATCH_INTERVAL = 299;
 	private static Logger logger = Logger.getRootLogger();
 	private static String kafkaTopic = "alerts";
 	private static String kafkaMessage = "You have a new alert!";
