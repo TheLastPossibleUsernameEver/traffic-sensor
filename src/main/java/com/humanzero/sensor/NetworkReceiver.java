@@ -10,7 +10,7 @@ import org.pcap4j.util.NifSelector;
 import java.util.Objects;
 
 /**
- * Custom Receiver that receives the data from all interfaces
+ * Custom Receiver that receives the data from network interfaces
  *
  */
 
@@ -39,7 +39,6 @@ public class NetworkReceiver extends Receiver<Packet> {
         } catch (Exception e) {
             e.printStackTrace();
         }
-
 
         PcapHandle packetHandler;
         int snapshotLength = 65536;
