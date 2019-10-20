@@ -51,9 +51,18 @@ Spark Streaming data limiter in Java
 
 ``` $ docker attach <хеш-контейнер> ```
 
+#### Удалите стандартную для CDH Java 7
+
+``` root@quickstart.cloudera$ rm -rf /usr/java/cloudera* ```
+
 #### Установите Java 8
 
-``` root@quickstart.cloudera$ yum install openjdk-8-jdk ```
+``` root@quickstart.cloudera$ yum install java-1.8.0-openjdk ```
+``` root@quickstart.cloudera$ yum install java-1.8.0-openjdk-devel```
+
+#### Установите libpcap
+
+``` root@quickstart.cloudera$ yum install libpcap-devel ```
 
 #### Зайдите в директорию проекта
 
@@ -62,6 +71,25 @@ Spark Streaming data limiter in Java
 #### Соберите проект
 
 ``` root@quickstart.cloudera$ mvn package```
+
+#### Если Maven не установлен, то установите его
+
+``` root@quickstart.cloudera$ cd /opt ```
+``` root@quickstart.cloudera$ wget https://www-eu.apache.org/dist/maven/maven-3/3.6.2/binaries/apache-maven-3.6.2-bin.tar.gz ```
+``` root@quickstart.cloudera$ ln -s apache-maven-3.6.2 maven ```
+``` root@quickstart.cloudera$ vi /etc/profile.d/maven.sh ```
+Перейдите в режим вставки, нажав i и добавьте следующее:
+
+``` export M2_HOME=/opt/maven ```
+``` export PATH=${M2_HOME}/bin:${PATH} ```
+
+#### Выйдите из vi
+
+Если вы не знаете, как выйти из vi, то нажмите Esc , затем наберите :wq и нажмите Enter
+
+#### Проиндексируйте изменения
+
+``` root@quickstart.cloudera$ source /etc/profile.d/maven.sh ```
 
 ### Установка Kafka
 
@@ -77,12 +105,9 @@ Spark Streaming data limiter in Java
 
 ``` root@quickstart.cloudera$ mv kafka_2.11-2.3.0 /opt```
 
-#### Установите tmux
+#### Установите и запустите tmux
 
 ``` root@quickstart.cloudera $ yum install tmux  ```
-
-#### Запустите tmux
-
 ``` root@quickstart.cloudera $ tmux ```
 
 #### Размножьте окно в 3 окна 
@@ -93,14 +118,22 @@ Ctrl-b + %
 
 Ctrl-b + Right-Arrow или Left-Arrow 
  
-#### Запустите Zookeeper
+#### Zookeeper запускать не нужно, т.к. его запуск инициализируется скриптом /usr/bin/docker-quickstart
 
-``` root@quickstart.cloudera$ cd /opt ```
-``` root@quickstart.cloudera$ bin/zookeeper-server-start.sh -daemon config/zookeeper.properties ```
+#### Измените JAVA_HOME
+
+``` root@quickstart.cloudera $ vi /etc/profile ```
+Найдите строчку с export JAVA_HOME и замените на
+``` export JAVA_HOME=/usr/lib/java-1.8.0-openjdk-1.8.0.222.b10-0.el6_10.x86_64 ```
+Сохраните и выйдите: Esc, :wq, Enter.
 
 #### Запустите Kafka-server
 
-``` root@quickstart.cloudera$ bin/kafka-server-start.sh config/server.properties ```
+``` root@quickstart.cloudera$ cd/opt/kafka-2.11-2.3.0 ```
+``` bin/kafka-server-start.sh config/server.properties ```
+
+Во всех трёх окнах нужно будет набрать: 
+``` source /etc/profile ```
 
 #### Перейдите в первое окно
 
@@ -113,7 +146,7 @@ Ctrl-b + Right-Arrow или Left-Arrow
 
 #### Запустите Kafka-topics
 
-``` root@quickstart.cloudera$ cd /opt ```
+``` root@quickstart.cloudera$ cd /opt/kafka_2.11-2.3.0 ```
 
 ``` root@quickstart.cloudera$ bin/kafka-console-consumer.sh --bootstrap-server localhost:9092 --topic alerts --from-beginning```
 
