@@ -13,13 +13,8 @@ import org.apache.spark.streaming.api.java.JavaDStream;
 import org.apache.spark.streaming.api.java.JavaStreamingContext;
 
 import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.Properties;
 
-/**
- * Ca
- *
- */
 
 public class App {
 
@@ -28,16 +23,19 @@ public class App {
 	private static Logger logger = Logger.getRootLogger();
 	private static String kafkaTopic = "alerts";
 	private static String kafkaMessage = "You have a new alert!";
-	private static Map<String, Object> kafkaParams = new HashMap<>();
+	private static Properties kafkaParams = new Properties();
 	private static long minLimit = 1073741824;
 	private static long maxLimit = 1024;
 	private static JavaStreamingContext streamingContext =
 			new JavaStreamingContext(conf, Durations.seconds(BATCH_INTERVAL));
 
+
 	private static void bootstrapKafka(){
 		kafkaParams.put("bootstrap.servers", "localhost:9092");
 		kafkaParams.put("key.serializer", StringSerializer.class);
 		kafkaParams.put("value.serializer", StringSerializer.class);
+		kafkaParams.put("group.max.session.timeout.ms", 300001);
+		kafkaParams.put("heartbeat.interval.ms", 300001 );
 	}
 
 //	private static void bootstrapHive(){
@@ -45,12 +43,12 @@ public class App {
 //	}
 
 	public static void main(String[] args) throws InterruptedException{
+
 		logger.setLevel(Level.WARN);
 
 		bootstrapKafka();
 
 		Producer<String, String> kafkaProducer = new KafkaProducer<>(kafkaParams);
-
 
 		JavaDStream<Long> byteFlow = streamingContext
 				.receiverStream(new NetworkReceiver())
