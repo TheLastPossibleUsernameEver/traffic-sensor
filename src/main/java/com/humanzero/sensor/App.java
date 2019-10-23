@@ -18,7 +18,6 @@ import java.util.Properties;
 
 public class App {
 
-	private static final SparkConf conf = new SparkConf().setMaster("local[2]").setAppName("traffic-sensor");
 	private static final int BATCH_INTERVAL = 299;
 	private static Logger logger = Logger.getRootLogger();
 	private static String kafkaTopic = "alerts";
@@ -26,9 +25,6 @@ public class App {
 	private static Properties kafkaParams = new Properties();
 	private static long minLimit = 1073741824;
 	private static long maxLimit = 1024;
-	private static JavaStreamingContext streamingContext =
-			new JavaStreamingContext(conf, Durations.seconds(BATCH_INTERVAL));
-
 
 	private static void bootstrapKafka(){
 		kafkaParams.put("bootstrap.servers", "localhost:9092");
@@ -38,11 +34,12 @@ public class App {
 		kafkaParams.put("heartbeat.interval.ms", 300001 );
 	}
 
-//	private static void bootstrapHive(){
-//
-//	}
 
 	public static void main(String[] args) throws InterruptedException{
+
+		SparkConf conf = new SparkConf().setMaster("local[2]").setAppName("traffic-sensor");
+		JavaStreamingContext streamingContext =
+				new JavaStreamingContext(conf, Durations.seconds(BATCH_INTERVAL));
 
 		logger.setLevel(Level.WARN);
 
