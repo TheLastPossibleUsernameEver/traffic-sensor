@@ -21,16 +21,16 @@ public class App {
 	private static final int BATCH_INTERVAL = 5;
 	private static String kafkaTopic = "alerts";
 	private static String kafkaMessage = "You have a new alert!";
-	private static Properties kafkaParams = new Properties();
+	private static Properties kafkaProps = new Properties();
 	private static long minLimit = 1073741824;
 	private static long maxLimit = 1024;
 
-	private static void bootstrapKafka(){
-		kafkaParams.put("bootstrap.servers", "localhost:9092");
-		kafkaParams.put("key.serializer", StringSerializer.class);
-		kafkaParams.put("value.serializer", StringSerializer.class);
-		kafkaParams.put("group.max.session.timeout.ms", 300001);
-		kafkaParams.put("heartbeat.interval.ms", 300001 );
+	private static void initKafkaProps(){
+		kafkaProps.put("bootstrap.servers", "localhost:9092");
+		kafkaProps.put("key.serializer", StringSerializer.class);
+		kafkaProps.put("value.serializer", StringSerializer.class);
+		kafkaProps.put("group.max.session.timeout.ms", 300001);
+		kafkaProps.put("heartbeat.interval.ms", 300001 );
 	}
 
 
@@ -38,13 +38,16 @@ public class App {
 
 		Logger.getRootLogger().setLevel(Level.WARN);
 
-		SparkConf conf = new SparkConf().setMaster("local[2]").setAppName("traffic-sensor");
+		SparkConf conf = new SparkConf()
+				.setMaster("local[2]")
+				.setAppName("traffic-sensor");
+
 		JavaStreamingContext streamingContext =
 				new JavaStreamingContext(conf, Durations.seconds(BATCH_INTERVAL));
 
-		bootstrapKafka();
+		initKafkaProps();
 
-		Producer<String, String> kafkaProducer = new KafkaProducer<>(kafkaParams);
+		Producer<String, String> kafkaProducer = new KafkaProducer<>(kafkaProps);
 
 		JavaDStream<Long> byteBatchCountFlow = streamingContext
 				.receiverStream(new NetworkReceiver())
