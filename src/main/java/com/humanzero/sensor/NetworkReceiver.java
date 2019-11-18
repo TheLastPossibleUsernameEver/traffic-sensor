@@ -3,9 +3,10 @@ package com.humanzero.sensor;
 import org.apache.spark.storage.StorageLevel;
 import org.apache.spark.streaming.receiver.Receiver;
 import org.pcap4j.core.PcapHandle;
+import org.pcap4j.core.PcapNativeException;
 import org.pcap4j.core.PcapNetworkInterface;
+import org.pcap4j.core.Pcaps;
 import org.pcap4j.packet.Packet;
-import org.pcap4j.util.NifSelector;
 
 import java.util.Objects;
 
@@ -15,6 +16,10 @@ import java.util.Objects;
  */
 
 public class NetworkReceiver extends Receiver<Packet> {
+
+    private static void selectInterface(){
+
+    }
 
     NetworkReceiver(){
         super(StorageLevel.MEMORY_AND_DISK_2());
@@ -33,10 +38,9 @@ public class NetworkReceiver extends Receiver<Packet> {
     private void receive(){
 
         PcapNetworkInterface networkInterface = null;
-
         try {
-            networkInterface = new NifSelector().selectNetworkInterface();
-        } catch (Exception e) {
+            networkInterface = Pcaps.getDevByName("any");
+        } catch (PcapNativeException e) {
             e.printStackTrace();
         }
 
@@ -46,8 +50,7 @@ public class NetworkReceiver extends Receiver<Packet> {
 
         try {
 
-            packetHandler = Objects
-                    .requireNonNull(networkInterface)
+            packetHandler = Objects.requireNonNull(networkInterface, "Error opening network interface")
                     .openLive(snapshotLength, PcapNetworkInterface.PromiscuousMode.PROMISCUOUS, timeout);
 
             while(packetHandler.getNextPacketEx()!=null){
