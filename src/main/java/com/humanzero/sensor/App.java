@@ -1,5 +1,6 @@
 package com.humanzero.sensor;
 
+import com.humanzero.sensor.receivers.NetworkReceiver;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.kafka.clients.producer.KafkaProducer;
 import org.apache.kafka.clients.producer.Producer;
