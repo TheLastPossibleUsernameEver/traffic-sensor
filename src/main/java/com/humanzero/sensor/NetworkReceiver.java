@@ -8,17 +8,23 @@ import org.pcap4j.core.PcapNetworkInterface;
 import org.pcap4j.core.Pcaps;
 import org.pcap4j.packet.Packet;
 
-import java.util.Objects;
-
 /**
- * Custom Receiver that receives the data from network interfaces
- *
+ * Custom Receiver that receives the data from all network interfaces
  */
 
 public class NetworkReceiver extends Receiver<Packet> {
 
-    private static void selectInterface(){
+    private static PcapNetworkInterface getInterfaceAny(){
 
+        PcapNetworkInterface networkInterfaceAny = null;
+
+        try {
+            networkInterfaceAny = Pcaps.getDevByName("any");
+        } catch (PcapNativeException e) {
+            e.printStackTrace();
+        }
+
+        return networkInterfaceAny;
     }
 
     NetworkReceiver(){
@@ -37,20 +43,13 @@ public class NetworkReceiver extends Receiver<Packet> {
 
     private void receive(){
 
-        PcapNetworkInterface networkInterface = null;
-        try {
-            networkInterface = Pcaps.getDevByName("any");
-        } catch (PcapNativeException e) {
-            e.printStackTrace();
-        }
-
         PcapHandle packetHandler;
         int snapshotLength = 65536;
         int timeout = 10;
 
         try {
 
-            packetHandler = Objects.requireNonNull(networkInterface, "Error opening network interface")
+            packetHandler = getInterfaceAny()
                     .openLive(snapshotLength, PcapNetworkInterface.PromiscuousMode.PROMISCUOUS, timeout);
 
             while(packetHandler.getNextPacketEx()!=null){
