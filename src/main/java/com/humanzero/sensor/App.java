@@ -46,15 +46,15 @@ public class App {
 
 		Producer<String, String> kafkaProducer = new KafkaProducer<>(kafkaParams);
 
-		JavaDStream<Long> byteFlow = streamingContext
+		JavaDStream<Long> byteBatchCountFlow = streamingContext
 				.receiverStream(new NetworkReceiver())
 				.map(packet -> ArrayUtils.toObject(packet.getRawData()))
 				.flatMap(x -> Arrays.asList(x).iterator())
 				.count();
 
-		byteFlow.print();
+		byteBatchCountFlow.print();
 
-		byteFlow.foreachRDD(rdd -> {
+		byteBatchCountFlow.foreachRDD(rdd -> {
 			if (rdd.count() < minLimit || rdd.count() > maxLimit){
 				kafkaProducer.send(new ProducerRecord<>(kafkaTopic, kafkaMessage));
 				kafkaProducer.close();
