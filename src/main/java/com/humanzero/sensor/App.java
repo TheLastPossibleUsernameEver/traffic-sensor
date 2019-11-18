@@ -18,8 +18,7 @@ import java.util.Properties;
 
 public class App {
 
-	private static final int BATCH_INTERVAL = 299;
-	private static Logger logger = Logger.getRootLogger();
+	private static final int BATCH_INTERVAL = 5;
 	private static String kafkaTopic = "alerts";
 	private static String kafkaMessage = "You have a new alert!";
 	private static Properties kafkaParams = new Properties();
@@ -37,11 +36,11 @@ public class App {
 
 	public static void main(String[] args) throws InterruptedException{
 
+		Logger.getRootLogger().setLevel(Level.WARN);
+
 		SparkConf conf = new SparkConf().setMaster("local[2]").setAppName("traffic-sensor");
 		JavaStreamingContext streamingContext =
 				new JavaStreamingContext(conf, Durations.seconds(BATCH_INTERVAL));
-
-		logger.setLevel(Level.WARN);
 
 		bootstrapKafka();
 
