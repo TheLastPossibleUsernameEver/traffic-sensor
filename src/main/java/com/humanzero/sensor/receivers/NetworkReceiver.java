@@ -1,4 +1,4 @@
-package com.humanzero.sensor;
+package com.humanzero.sensor.receivers;
 
 import org.apache.spark.storage.StorageLevel;
 import org.apache.spark.streaming.receiver.Receiver;
@@ -15,7 +15,7 @@ import java.util.concurrent.TimeoutException;
 
 public class NetworkReceiver extends Receiver<Packet> {
 
-    NetworkReceiver(){
+    public NetworkReceiver(){
         super(StorageLevel.MEMORY_AND_DISK_2());
     }
 
