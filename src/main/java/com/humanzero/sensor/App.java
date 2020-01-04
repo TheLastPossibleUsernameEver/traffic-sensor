@@ -1,6 +1,6 @@
 package com.humanzero.sensor;
 
-import com.humanzero.sensor.receivers.NetworkReceiver;
+import com.humanzero.sensor.receivers.PacketReceiver;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.kafka.clients.producer.KafkaProducer;
 import org.apache.kafka.clients.producer.Producer;
@@ -51,7 +51,7 @@ public class App {
 		Producer<String, String> kafkaProducer = new KafkaProducer<>(kafkaProps);
 
 		JavaDStream<Long> byteBatchCountFlow = streamingContext
-				.receiverStream(new NetworkReceiver())
+				.receiverStream(new PacketReceiver())
 				.map(packet -> ArrayUtils.toObject(packet.getRawData()))
 				.flatMap(x -> Arrays.asList(x).iterator())
 				.count();

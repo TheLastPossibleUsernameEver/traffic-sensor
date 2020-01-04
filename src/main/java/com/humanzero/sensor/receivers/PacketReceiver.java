@@ -13,9 +13,9 @@ import java.util.concurrent.TimeoutException;
  * Custom Receiver that receives the data from all network interfaces
  */
 
-public class NetworkReceiver extends Receiver<Packet> {
+public class PacketReceiver extends Receiver<Packet> {
 
-    public NetworkReceiver(){
+    public PacketReceiver(){
         super(StorageLevel.MEMORY_AND_DISK_2());
     }
 
