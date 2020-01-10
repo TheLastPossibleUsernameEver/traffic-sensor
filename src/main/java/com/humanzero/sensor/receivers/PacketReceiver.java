@@ -34,7 +34,7 @@ public class PacketReceiver extends Receiver<Packet> {
     public void onStop() {
     }
 
-    private static PcapHandle openPacketHandler(PcapNetworkInterface networkInterface) throws PcapNativeException {
+    private static PcapHandle openPacketHandlerOn(PcapNetworkInterface networkInterface) throws PcapNativeException {
 
         int snapshotLength = 65536;
         int timeout = 10;
@@ -45,7 +45,7 @@ public class PacketReceiver extends Receiver<Packet> {
 
     private void receive() throws PcapNativeException, EOFException, TimeoutException, NotOpenException {
 
-        PcapHandle packetHandler = openPacketHandler(Pcaps.getDevByName("any"));
+        PcapHandle packetHandler = openPacketHandlerOn(Pcaps.getDevByName("any"));
 
             while(Objects.requireNonNull(packetHandler).getNextPacketEx()!=null){
                     store(packetHandler.getNextPacketEx());
