@@ -45,7 +45,9 @@ public class PacketReceiver extends Receiver<Packet> {
 
     private void receive() throws PcapNativeException, EOFException, TimeoutException, NotOpenException {
 
-        PcapHandle packetHandler = openPacketHandlerOn(Pcaps.getDevByName("any"));
+        PcapNetworkInterface interfaceAny = Pcaps.getDevByName("any");
+
+        PcapHandle packetHandler = openPacketHandlerOn(interfaceAny);
 
             while(Objects.requireNonNull(packetHandler).getNextPacketEx()!=null){
                     store(packetHandler.getNextPacketEx());
