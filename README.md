@@ -151,4 +151,4 @@ Ctrl-b + Right-Arrow или Left-Arrow
 
 ``` root@quickstart.cloudera$ bin/kafka-console-consumer.sh --bootstrap-server localhost:9092 --topic alerts --from-beginning```
 
-#### В окне с Kafka-topics при превышении установленных лимитов траффика за 5 минут будет отображаться сообщение "You have a new alert!"
+#### В окне с Kafka-topics при превышении установленных лимитов траффика за 1 минуту будет отображаться сообщение "You have a new alert!"
