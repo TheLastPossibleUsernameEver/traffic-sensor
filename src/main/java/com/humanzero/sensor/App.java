@@ -19,7 +19,7 @@ import java.util.Properties;
 
 public class App {
 
-	private static final int BATCH_INTERVAL = 5;
+	private static final int BATCH_INTERVAL_SECONDS = 60;
 	private static String kafkaTopic = "alerts";
 	private static String kafkaMessage = "You have a new alert!";
 	private static Properties kafkaProps = new Properties();
