@@ -44,7 +44,7 @@ public class App {
 				.setAppName("traffic-sensor");
 
 		JavaStreamingContext streamingContext =
-				new JavaStreamingContext(conf, Durations.seconds(BATCH_INTERVAL));
+				new JavaStreamingContext(conf, Durations.seconds(BATCH_INTERVAL_SECONDS));
 
 		initKafkaProps();
 
